@@ -20,11 +20,11 @@ def PagenatorPage(List, num, request):
 def dashboard(request):    
     prod_quantity = models.ProductModel.objects.filter(is_active = True).count()
     prod_sum = 0
-    for num in models.ProductLitr.objects.all():
+    for num in models.ProductModel.objects.all():
         prod_sum += num.litr
         
     context = {
-        'products' : PagenatorPage(models.ProductLitr.objects.all(), 5, request),
+        'products' : PagenatorPage(models.ProductModel.objects.all(), 5, request),
         'prod_sum':prod_sum,
         'prod_quantity':prod_quantity
     }
@@ -41,12 +41,9 @@ def add_product(request):
     if request.method == 'POST':
         name = request.POST['name']
         litr = request.POST['litr']
-        new_product = models.ProductModel.objects.create(
-            name=name
-        )
-        prod_litr = models.ProductLitr.objects.create(
-            product_to = new_product,
-            litr=litr
+        models.ProductModel.objects.create(
+            name=name,
+            litr = litr
         )
         return redirect('dashboard_url')
 
@@ -55,7 +52,7 @@ def add_litr_product(request):
         litr = request.POST['litr']
         litr = float(litr)
         prod_id = request.POST['prod_id']
-        product = models.ProductLitr.objects.get(id=prod_id)
+        product = models.ProductModel.objects.get(id=prod_id)
         product.litr += litr
         product.save()
         return redirect('dashboard_url')
@@ -66,7 +63,7 @@ def substract_litr_product(request):
         litr = request.POST['litr']
         litr = float(litr)
         prod_id = request.POST['prod_id']
-        product = models.ProductLitr.objects.get(id=prod_id)
+        product = models.ProductModel.objects.get(id=prod_id)
         product.litr -= litr
         if product.litr < 1:
             product.is_active = False
@@ -76,7 +73,6 @@ def substract_litr_product(request):
 def delete_product(request):
     if request.method == 'POST':
         prod_id =  request.POST['prod_id']
-        product_litr = models.ProductLitr.objects.get(id=prod_id)
-        product_litr.product_to.delete()
+        product_litr = models.ProductModel.objects.get(id=prod_id)
         product_litr.delete()
         return redirect('dashboard_url')
