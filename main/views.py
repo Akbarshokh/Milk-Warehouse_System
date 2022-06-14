@@ -22,9 +22,13 @@ def dashboard(request):
     prod_sum = 0
     for num in models.ProductModel.objects.all():
         prod_sum += num.litr
-        
+    search = request.GET.get('q')
+    if search != '' and search is not None:
+        products = models.ProductModel.objects.filter(name__icontains=search).filter(is_active=True)
+    else:
+        products = models.ProductModel.objects.filter(is_active = True)
     context = {
-        'products' : PagenatorPage(models.ProductModel.objects.all(), 5, request),
+        'products' : PagenatorPage(products, 5, request),
         'prod_sum':prod_sum,
         'prod_quantity':prod_quantity
     }
