@@ -1,6 +1,65 @@
-{% extends 'dashboard.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
-
+<div class="page-title-area">
+    <div class="row align-items-center">
+        <div class="col-sm-6">
+            <div class="breadcrumbs-area clearfix">
+                <h4 class="page-title pull-left">Rash milk</h4>
+                <ul class="breadcrumbs pull-left">
+                    <li><a href="index.html">Dashboard</a></li>
+                    <li><span>Maxsulot yaratish</span></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-sm-6 clearfix">
+            <div class="user-profile pull-right">
+                <img class="avatar user-thumb" src="assets/images/author/avatar.png" alt="avatar">
+                <h4 class="user-name dropdown-toggle" data-toggle="dropdown">Kumkum Rai <i class="fa fa-angle-down"></i></h4>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#">Message</a>
+                    <a class="dropdown-item" href="#">Settings</a>
+                    <a class="dropdown-item" href="#">Log Out</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card">
+    <div class="card-body">
+        <p class="text-muted font-14 mb-4"> <strong> Maxsulot yaratish uchun quyidagi formani to`ldiring</strong></p>
+        <form method="post">
+            <div class="row">
+                {% csrf_token %}
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="example-text-input" class="col-form-label">Qaynday maxsulot yaratmoqchisiz?</label>
+                        <input class="form-control" type="text" id="example-text-input" placeholder="smetana" name="name">
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label class="col-form-label">Kerak bo`ladigan maxsulot</label>
+                        <select class="form-control" name="product">
+                            {% for product in products %}
+                            <option value="{{product.id}}">{{product}} {{product.litr}} litr</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="form-group">
+                        <label for="example-text-input" class="col-form-label">Hajmi</label>
+                        <input class="form-control" type="number" id="example-text-input" placeholder="7" name="quantity">
+                    </div>
+                </div>
+                <!-- <button type="submit">Yaratish</button> -->
+            </div>
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-flat btn-info mb-7">Yaratish</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 {% endblock content %}
