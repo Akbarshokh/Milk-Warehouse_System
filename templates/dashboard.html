@@ -61,7 +61,7 @@
                 </div>
                 <!-- sales report area end -->
                 <div class="row">
-                    <div class="col-2">
+                    <div class="col-4">
                         <button type="button" class="btn btn-primary btn-flat btn-lg mt-3" data-toggle="modal" data-target="#exampleModalLong">Sut qo`shish +</button>
                         
                         <!-- Modal -->
@@ -72,16 +72,12 @@
                                         <h5 class="modal-title">Sut Maxsulotini qo'shish</h5>
                                         <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                                     </div>
-                                    <form action="{% url 'add_product_url' %}" method="post">
+                                    <form action="{% url 'add_milk_url' %}" method="post">
                                         {% csrf_token %}
                                     <div class="modal-body">
                                             <div class="form-group">
-                                                <label for="example-url-input" class="col-form-label">Maxsulot nomi</label>
-                                                <input class="form-control" type="text" id="example-url-input" placeholder='Misol: Sut' name='name'>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="example-number-input" class="col-form-label">Hajmi (litr)</label>
-                                                <input class="form-control" type="number" id="example-number-input" placeholder='Misol: 5 litr' name='litr' >
+                                                <label for="example-url-input" class="col-form-label">Necha litr qo`shmoqchisiz?</label>
+                                                <input class="form-control" type="number" id="example-url-input" placeholder='{{milk_litr}}' name='litr'>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -93,11 +89,48 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col">
-                        <button type="button" class="btn btn-primary btn-flat btn-lg mt-3" data-toggle="modal" data-target="#exampleModalLong">Maxsulot Olish</button>
+                    <div class="col-4">
+                        <button type="button" class="btn btn-primary btn-flat btn-lg mt-3" data-toggle="modal" data-target="#exampleModalLong2">Maxsulot Olish +</button>
                         
                         <!-- Modal -->
-                        <div class="modal fade" id="exampleModalLong">
+                        <div class="modal fade" id="exampleModalLong2">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Yangi Maxsulot Olish</h5>
+                                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                                    </div>
+                                    <form action="{% url 'make_product_url' %}" method="post">
+                                        {% csrf_token %}
+                                    <div class="modal-body">
+                                            <div class="form-group">
+                                                <label class="col-form-label">Qanday maxsulot olmoqchisiz?</label>
+                                                
+                                                <select class="form-control" name="product">
+                                                    {% for product in products %}
+                                                        <option value="{{product.id}}" >{{product.name}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="example-url-input" class="col-form-label">Necha litr olmoqchisiz?</label>
+                                                <input class="form-control" type="number" id="example-url-input" placeholder='5' name='quantity'>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Ortga Qaytish</button>
+                                            <button type="submit" class="btn btn-primary">Saqlash</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <button type="button" class="btn btn-primary btn-flat btn-lg mt-3" data-toggle="modal" data-target="#exampleModalLong3">Maxsulot qo`shish +</button>
+                        
+                        <!-- Modal -->
+                        <div class="modal fade" id="exampleModalLong3">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -108,21 +141,10 @@
                                         {% csrf_token %}
                                     <div class="modal-body">
                                             <div class="form-group">
-                                                <label class="col-form-label">Select</label>
-                                                
-                                                <select class="form-control">
-                                                    <option>Select</option>
-                                                    <option>Large select</option>
-                                                    <option>Small select</option>
-                                                </select>
                                             </div>
                                             <div class="form-group">
                                                 <label for="example-url-input" class="col-form-label">Maxsulot nomi</label>
-                                                <input class="form-control" type="text" id="example-url-input" placeholder='Misol: Sut' name='name'>
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="example-number-input" class="col-form-label">Hajmi (litr)</label>
-                                                <input class="form-control" type="number" id="example-number-input" placeholder='Misol: 5 litr' name='litr' >
+                                                <input class="form-control" type="text" id="example-url-input" placeholder='tvarog' name='name'>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
@@ -134,6 +156,7 @@
                             </div>
                         </div>
                     </div>
+                   
                 </div>
                 
                 

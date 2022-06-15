@@ -1,7 +1,8 @@
 from math import prod
+import re
 
 from django.http import HttpResponse
-from . models import ProductModel
+from . models import ProductModel, MilkModel
 from django.shortcuts import redirect, render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
@@ -21,9 +22,14 @@ def PagenatorPage(List, num, request):
 
 def dashboard(request):    
     prod_quantity = ProductModel.objects.filter(is_active = True).count()
-    prod_sum = 0
-    for num in ProductModel.objects.all():
-        prod_sum += num.litr
+    milk_litr = MilkModel.objects.first().litr
+
+    try:
+        prod_sum = 0
+        for num in ProductModel.objects.all():
+            prod_sum += num.litr
+    except:
+        prod_quantity = 0
     search = request.GET.get('q')
     if search != '' and search is not None:
         products = ProductModel.objects.filter(name__icontains=search).filter(is_active=True)
@@ -32,7 +38,8 @@ def dashboard(request):
     context = {
         'products' : PagenatorPage(products, 5, request),
         'prod_sum':prod_sum,
-        'prod_quantity':prod_quantity
+        'prod_quantity':prod_quantity,
+        'milk_litr':milk_litr
     }
     return render(request, 'dashboard.html', context)
 
@@ -46,10 +53,8 @@ def logout_view(request):
 def add_product(request):
     if request.method == 'POST':
         name = request.POST['name']
-        litr = request.POST['litr']
         ProductModel.objects.create(
             name=name,
-            litr = litr
         )
         return redirect('dashboard_url')
 
@@ -85,26 +90,35 @@ def delete_product(request):
 
 def make_product(request):
     products = ProductModel.objects.filter(is_active = True)
+    milk = MilkModel.objects.first()
     if request.method == 'POST':
-        name = request.POST['name']
         product_id = request.POST['product']
         quantity = request.POST['quantity']
         quantity = float(quantity)
-        product = ProductModel.objects.get(id=product_id)
-        product.litr -= quantity
-        if product.litr <0:
-            # shu yerga message return qilishi kerak, test uchun http response qilib qo`ydim
-            return HttpResponse('maxsulot hajmi yetarlik emas')
-        elif product.litr == 0:
-            product.is_active = False
-            product.save()
+        if quantity > milk.litr:
+            return HttpResponse('sut yetarlik emas')
         else:
+            product = ProductModel.objects.get(id=product_id)
+            product.litr += quantity
             product.save()
-            ProductModel.objects.create(
-                name=name,
-                litr=quantity
-            )
+            milk.litr -=quantity
+            milk.save()
+        return redirect('dashboard_url')
     context = {
         'products':products
     }
     return render(request, 'new_products.html', context)
+
+def add_milk(request):
+    if request.method == 'POST':
+        litr = request.POST['litr']
+        try:
+            milk = MilkModel.objects.first()
+            print(milk.litr)
+            milk.litr += float(litr)
+        except:
+            milk = MilkModel.objects.create(
+                litr=litr
+            )
+        milk.save()
+        return redirect('dashboard_url')
