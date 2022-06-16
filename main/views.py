@@ -25,11 +25,7 @@ def dashboard(request):
         milk_litr = MilkModel.objects.create(
             litr = 0
         )
-    # search = request.GET.get('q')
-    # if search != '' and search is not None:
-    #     products = ProductModel.objects.filter(name__icontains=search).filter(is_active=True)
-    # else:
-    #     products = ProductModel.objects.filter(is_active = True)[:5]
+  
     table_products = ProductModel.objects.filter(is_active = True)[:4]
     products = ProductModel.objects.all()
     context = {
@@ -138,3 +134,12 @@ def add_milk(request):
             )
         milk.save()
         return redirect('dashboard_url')
+
+@login_required(login_url='login_url')
+def products_list(request):
+    search = request.GET.get('q')
+    if search != '' and search is not None:
+        products = ProductModel.objects.filter(name__icontains=search)
+    else:
+        products = ProductModel.objects.all()
+    return render(request, 'products.html', {'products':PagenatorPage(products,10, request)})

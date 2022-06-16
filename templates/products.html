@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+    <!-- table primary start -->
+    <div class="col-lg-12 mt-5">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-sm-flex justify-content-between align-items-center">
+                    <h4 class="header-title mb-0">Mahsulotlar Ro'yxati</h4>
+                    <div class="search-box pull-left">
+                        <form method="get">
+                            <input type="text" name="q" placeholder="Qidiruv..." required="">
+                            <i class="ti-search"></i>
+                        </form>
+                    </div>
+                </div>  <br>
+                <div class="single-table">
+                    <div class="table-responsive">
+                        <table class="table text-center">
+                            <thead class="text-uppercase bg-primary">
+                                <tr class="text-white">
+                                    <th scope="col">№</th>
+                                    <th scope="col">Nomi</th>
+                                    <th scope="col">Hajmi</th>
+                                    <th scope="col">Qo`shish</th>
+                                    <th scope="col">Ayrish</th>
+                                    <th scope="col">O`chirish</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in products %}
+                                            <tr>
+                                                <td class="coin-name">{{forloop.counter}}</td>
+                                                <td class="coin-name">{{product.name}}</td>
+                                                <td class="coin-name">{{product.litr}}</td>
+                                                <td class="coin-name">
+                                                    
+                                                    <span class="ti-plus"  data-toggle="modal" data-target="#{{forloop.counter}}1"></span>
+                                                        <!-- + -->
+                                                            <div class="modal fade" id="{{forloop.counter}}1">
+                                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title">{{product.product_to}}</h5>
+                                                                            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                                                                        </div>
+                                                                        <form action="{% url 'update_product_url' %}" method="post">
+                                                                            {% csrf_token %}
+                                                                            <div class="modal-body">
+                                                                                <div class="form-group">
+                                                                                    <label for="example-tel-input2" class="col-form-label">Necha litr qo`shmoqchisiz</label>
+                                                                                    <input class="form-control" type="text" id="example-tel-input2" placeholder='7' name='litr' >
+                                                                                    <input type="hidden" name="prod_id" value={{product.id}}>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Ortga Qaytish</button>
+                                                                                <button type="submit" class="btn btn-primary">Saqlash</button>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                </td>
+
+                                                <td class="coin-name">
+                                                        <span class="ti-minus"  data-toggle="modal" data-target="#{{forloop.counter}}2"></span>
+                                                        <!-- - -->
+                                                            <div class="modal fade" id="{{forloop.counter}}2">
+                                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title">{{product.product_to}}</h5>
+                                                                            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                                                                        </div>
+                                                                        <form action="{% url 'substract_product_url' %}" method="post">
+                                                                            {% csrf_token %}
+                                                                            <div class="modal-body">
+                                                                                <label for="example-tel-input2" class="col-form-label">Necha litr ayrimoqchisiz?</label>
+                                                                                <input class="form-control" type="text" id="example-tel-input2" placeholder='Misol: 7 litr' name='litr' >
+                                                                                <input type="hidden" name="prod_id" value={{product.id}}>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Ortga Qaytish</button>
+                                                                                <button type="submit" class="btn btn-primary">Saqlash</button>
+                                                                            </div>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                </td>
+
+                                                <td class="coin-name">
+                                                    <span class="ti-trash" data-toggle="modal" data-target="#{{forloop.counter}}"></span> 
+                                                        <!-- Modal -->
+                                                        <div class="modal fade" id="{{forloop.counter}}">
+                                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title">{{product.product_to}}</h5>
+                                                                        <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                                                                    </div>
+                                                                    <div class="modal-body">
+                                                                        <p> Siz maxsulotni o`chirmoqchimisiz?</p>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <form action="{% url 'delete_product_url' %}" method="post">
+                                                                            {% csrf_token %}
+                                                                            <input type="hidden" value={{product.id}} name='prod_id' >
+                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Ortga Qaytish</button>
+                                                                            <button type="submit" class="btn btn-primary">Saqlash</button>
+                                                                        </form>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>                                                   
+                                                </td>
+                                            </tr>   
+                                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div> <br><br>
+                {% if products.paginator.num_pages > 1 %}
+                <nav aria-label="Page navigation example" id="pagination-nav">
+                    <ul class="pagination pagination-primary">
+                        {% if products.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{products.previous_page_number }}" aria-label="Previous">
+                                    <span aria-hidden="true">«</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% for num in products.paginator.page_range %}
+                        {% if num == products.number %}
+                        <li class="page-item active"><a class="page-link" href="#">{{num}}</a></li>
+                        {% elif num > products.number|add:'-3' and num < products.number|add:'3' %}
+                        <li class="page-item "><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                        {% endif %}
+                        {% endfor %}
+                        {% if products.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ products.next_page_number }}" aria-label="Next">
+                                <span aria-hidden="true">»</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- table primary end -->
+</div>
+{% endblock content %}
