@@ -33,7 +33,7 @@
                             <div class="card">
                                 <div class="seo-fact sbg1"><div class="chartjs-size-monitor" style="position: absolute; inset: 0px; overflow: hidden; pointer-events: none; visibility: hidden; z-index: -1;"><div class="chartjs-size-monitor-expand" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:1000000px;height:1000000px;left:0;top:0"></div></div><div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;"><div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
                                     <div class="p-4 d-flex justify-content-between align-items-center">
-                                        <div class="seofct-icon"><i class="ti-thumb-up"></i> Ombordagi sut hajmi</div>
+                                        <div class="seofct-icon"><i class="ti-pie-chart"></i> Ombordagi sut hajmi</div>
                                         <h2>{{milk_litr}}</h2>
                                     </div>
                                     <canvas id="seolinechart1" height="55" width="333" style="display: block; width: 333px; height: 55px;" class="chartjs-render-monitor"></canvas>
@@ -49,7 +49,7 @@
                                     <div class="chartjs-size-monitor-shrink" style="position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden;pointer-events:none;visibility:hidden;z-index:-1;">
                                     <div style="position:absolute;width:200%;height:200%;left:0; top:0"></div></div></div>
                                     <div class="p-4 d-flex justify-content-between align-items-center">
-                                        <div class="seofct-icon"><i class="ti-share"></i>Umumiy maxsulotlar soni</div>
+                                        <div class="seofct-icon"><i class="ti-server"></i>Umumiy maxsulotlar soni</div>
                                         <h2>{{prod_quantity}}</h2>
                                     </div>
                                     <canvas id="seolinechart2" height="55" width="333" style="display: block; width: 333px; height: 55px;" class="chartjs-render-monitor"></canvas>
@@ -168,8 +168,8 @@
                                 <div class="d-sm-flex justify-content-between align-items-center">
                                     <h4 class="header-title mb-0">Mahsulotlar Ro'yxati</h4>
                                     <div class="search-box pull-left">
-                                        <form method="get">
-                                            <input type="text" name="q" placeholder="Search..." required>
+                                        <form method="get" action="{% url 'products_url' %}">
+                                            <input type="text" name="q" placeholder="Qidiruv..." required>
                                             <i class="ti-search"></i>
                                         </form>
                                     </div>
