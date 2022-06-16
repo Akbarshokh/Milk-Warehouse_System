@@ -1,16 +1,13 @@
-from math import prod
-import re
-
 from django.http import HttpResponse
 from . models import ProductModel, MilkModel
 from django.shortcuts import redirect, render
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 def PagenatorPage(List, num, request):
     paginator = Paginator(List, num)
     pages = request.GET.get('page')
-
     try:
         list = paginator.page(pages)
     except PageNotAnInteger:
@@ -19,37 +16,51 @@ def PagenatorPage(List, num, request):
         list = paginator.page(paginator.num_pages)
     return list
 
-
+@login_required(login_url='login_url')
 def dashboard(request):    
     prod_quantity = ProductModel.objects.filter(is_active = True).count()
-    milk_litr = MilkModel.objects.first().litr
-
     try:
-        prod_sum = 0
-        for num in ProductModel.objects.all():
-            prod_sum += num.litr
+        milk_litr = MilkModel.objects.first().litr
     except:
-        prod_quantity = 0
-    search = request.GET.get('q')
-    if search != '' and search is not None:
-        products = ProductModel.objects.filter(name__icontains=search).filter(is_active=True)
-    else:
-        products = ProductModel.objects.filter(is_active = True)
+        milk_litr = MilkModel.objects.create(
+            litr = 0
+        )
+    # search = request.GET.get('q')
+    # if search != '' and search is not None:
+    #     products = ProductModel.objects.filter(name__icontains=search).filter(is_active=True)
+    # else:
+    #     products = ProductModel.objects.filter(is_active = True)[:5]
+    table_products = ProductModel.objects.filter(is_active = True)[:4]
+    products = ProductModel.objects.all()
     context = {
-        'products' : PagenatorPage(products, 5, request),
-        'prod_sum':prod_sum,
+        'products' : products,
         'prod_quantity':prod_quantity,
-        'milk_litr':milk_litr
+        'milk_litr':milk_litr,
+        'table_products':table_products
     }
     return render(request, 'dashboard.html', context)
 
 def login_view(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                login(request, user)
+                return redirect('dashboard_url')
+            else:
+                return HttpResponse('Disabled account')
+        else:
+            return HttpResponse('Invalid login')
     return render(request, 'login.html')
 
 
 def logout_view(request):
-    return render(request, 'logout.html')
+        logout(request)
+        return redirect("login_url")
 
+@login_required(login_url='login_url')
 def add_product(request):
     if request.method == 'POST':
         name = request.POST['name']
@@ -58,6 +69,7 @@ def add_product(request):
         )
         return redirect('dashboard_url')
 
+@login_required(login_url='login_url')
 def add_litr_product(request):
     if request.method == 'POST':
         litr = request.POST['litr']
@@ -69,6 +81,7 @@ def add_litr_product(request):
         return redirect('dashboard_url')
     
 
+@login_required(login_url='login_url')
 def substract_litr_product(request):
     if request.method == 'POST':
         litr = request.POST['litr']
@@ -81,6 +94,7 @@ def substract_litr_product(request):
         product.save()
         return redirect('dashboard_url')
 
+@login_required(login_url='login_url')
 def delete_product(request):
     if request.method == 'POST':
         prod_id =  request.POST['prod_id']
@@ -88,6 +102,7 @@ def delete_product(request):
         product_litr.delete()
         return redirect('dashboard_url')
 
+@login_required(login_url='login_url')
 def make_product(request):
     products = ProductModel.objects.filter(is_active = True)
     milk = MilkModel.objects.first()
@@ -109,6 +124,7 @@ def make_product(request):
     }
     return render(request, 'new_products.html', context)
 
+@login_required(login_url='login_url')
 def add_milk(request):
     if request.method == 'POST':
         litr = request.POST['litr']
